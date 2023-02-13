@@ -39,3 +39,31 @@ resource "aws_security_group" "allow_ports" {
        Name = "Allow SSH and HTTP"
    }
 }
+
+resource "aws_security_group" "rds_sg" {
+  name        = "rds_sg"
+  description = "rds security group"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress {
+    description     = "allow mysql connections from ec2"
+    from_port       = "3306"
+    to_port         = "3306"
+    protocol        = "tcp"
+    security_groups = [aws_security_group.allow_ports.id]
+  }
+}
+
+resource "aws_security_group" "redis_sg" {
+  name        = "redis_sg"
+  description = "redis security group"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress {
+    description     = "allow redis connections from ec2"
+    from_port       = "6379"
+    to_port         = "6379"
+    protocol        = "tcp"
+    security_groups = [aws_security_group.allow_ports.id]
+  }
+}

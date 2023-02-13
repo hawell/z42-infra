@@ -20,3 +20,15 @@ variable "instance_type" {
    description = "Type of AWS EC2 instance."
    default     = "t2.micro"
 }
+
+variable "db_username" {
+   description = "database master username"
+   type        = string
+   sensitive   = true
+}
+
+variable "db_password" {
+   description = "databse master password"
+   type        = string
+   sensitive   = true
+}

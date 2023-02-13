@@ -22,3 +22,15 @@ output "private_pem" {
 output "ecr_address" {
    value = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
 }
+
+output "database_endpoint" {
+   value = aws_db_instance.z42_rds.address
+}
+
+output "database_port" {
+   value = aws_db_instance.z42_rds.port
+}
+
+output "redis_address" {
+   value = aws_elasticache_cluster.z42_redis.cache_nodes[*].address
+}
