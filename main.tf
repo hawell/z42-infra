@@ -9,7 +9,7 @@ resource "aws_instance" "webserver" {
    ami                    = "${lookup(var.aws_amis, var.aws_region)}"
    iam_instance_profile   = aws_iam_instance_profile.profile.name
    key_name               = aws_key_pair.z42keypair.key_name
-   vpc_security_group_ids = ["${aws_security_group.allow_ports.id}"]
+   vpc_security_group_ids = ["${aws_security_group.ec2_sg.id}"]
    subnet_id              = "${element(module.vpc.public_subnets,0)}"
    user_data              = "${data.template_file.init.rendered}"
 
@@ -43,4 +43,74 @@ resource "aws_instance" "webserver" {
 resource "aws_eip" "webserver-eip" {
    instance = aws_instance.webserver.id
    vpc = true
+}
+
+resource "aws_security_group" "ec2_sg" {
+   name        = "ec2_sg"
+   description = "Allow inbound SSH traffic and http from any IP"
+   vpc_id      = "${module.vpc.vpc_id}"
+
+   #ssh access
+   ingress {
+       from_port   = 22
+       to_port     = 22
+       protocol    = "tcp"
+       cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   # HTTP access
+   ingress {
+       from_port   = 80
+       to_port     = 80
+       protocol    = "tcp"
+       cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   ingress {
+       from_port = 443
+       to_port   = 443
+       protocol  = "tcp"
+       cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   ingress {
+       from_port = 53
+       to_port   = 53
+       protocol  = "tcp"
+       cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   ingress {
+       from_port = 53
+       to_port   = 53
+       protocol  = "udp"
+       cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   egress {
+       from_port   = 0
+       to_port     = 0
+       protocol    = "-1"
+       cidr_blocks = ["0.0.0.0/0"]
+   }
+
+   tags = {
+       Name = "Allow SSH and HTTP"
+   }
+}
+
+output "webserver_ids" {
+   value = ["${aws_instance.webserver.*.id}"]
+}
+
+output "ip_addresses" {
+   value = ["${aws_instance.webserver.*.id}"]
+}
+
+output "public_dns" {
+   value = ["${aws_instance.webserver.*.public_dns}"]
+}
+
+output "private_ip" {
+   value = ["${aws_instance.webserver.*.private_ip}"]
 }
