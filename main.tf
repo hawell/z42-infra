@@ -28,14 +28,15 @@ resource "aws_instance" "webserver" {
       destination = "/tmp/docker-compose.yml"
       content = templatefile("./scripts/docker-compose.yml.tpl", {
          ecr_address = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
+         recaptcha_key = "${var.recaptcha_key}"
       })
    }
 
    provisioner "remote-exec" {
       inline = [
          "sudo cloud-init status --wait",
-         "sudo mv /tmp/docker-compose.yml /var/docker-compose.yml",
-         "sudo docker-compose -f /var/docker-compose.yml up -d"
+         "sudo mv /tmp/docker-compose.yml /var/z42/docker-compose.yml",
+         "sudo docker-compose -f /var/z42/docker-compose.yml up -d"
          ]
    }
 }

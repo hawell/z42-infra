@@ -32,3 +32,9 @@ variable "db_password" {
    type        = string
    sensitive   = true
 }
+
+variable "recaptcha_key" {
+   description = "recaptcha site key"
+   type        = string
+   sensitive   = true
+}
