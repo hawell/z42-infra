@@ -1,11 +1,11 @@
 # Provides an SES domain identity resource
 resource "aws_ses_domain_identity" "ses_domain" {
-  domain = "zone-42.com"
+  domain = "chordsoft.org"
 }
 
 resource "aws_ses_domain_mail_from" "main" {
   domain           = aws_ses_domain_identity.ses_domain.domain
-  mail_from_domain = "mail.zone-42.com"
+  mail_from_domain = "mail.chordsoft.org"
 }
 
 
@@ -28,7 +28,7 @@ resource "aws_ses_domain_mail_from" "main" {
 #}
 
 #resource "aws_route53_record" "spf_domain" {
-#  zone_id = data.aws_route53_zone.main.zone_id   
+#  zone_id = data.aws_route53_zone.main.zone_id
 #  name    = var.domain
 #  type    = "TXT"
 #  ttl     = "600"
@@ -41,7 +41,7 @@ resource "aws_ses_domain_dkim" "ses_domain_dkim" {
 
 #resource "aws_route53_record" "amazonses_dkim_record" {
 #  count   = 3
-#  zone_id = data.aws_route53_zone.main.zone_id 
+#  zone_id = data.aws_route53_zone.main.zone_id
 #  name    = "${element(aws_ses_domain_dkim.ses_domain_dkim.dkim_tokens, count.index)}._domainkey.${var.domain}"
 #  type    = "CNAME"
 #  ttl     = "600"
