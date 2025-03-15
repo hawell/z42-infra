@@ -99,6 +99,16 @@ services:
     networks:
       - app-network
 
+  watchlist-importer:
+    image: ${ecr_address}/watchlist-importer:latest
+    restart: on-failure
+    env_file:
+      - ./watchlist/.env.imorter
+    networks:
+      - app-network
+    volumes:
+      - ./watchlist/privacy-policy.html:/assets/privacy-policy.html
+
 
   nginx:
     image: nginx:latest
@@ -111,6 +121,7 @@ services:
       - ./certs/zone-42.com:/etc/ssl/zone-42.com
       - ./certs/chordsoft.org:/etc/ssl/chordsoft.org
       - ./logs/nginx:/var/log/nginx
+      - ./app-ads.txt:/var/www/app-ads.txt
     networks:
       - app-network
 
